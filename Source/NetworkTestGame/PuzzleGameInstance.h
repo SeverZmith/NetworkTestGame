@@ -24,10 +24,10 @@ public:
 	void LoadMenu();
 
 	UFUNCTION(Exec)
-	void Host();
+	void HostGame();
 
 	UFUNCTION(Exec)
-	void Join(const FString& Address);
+	void JoinGame(const FString& Address);
 
 private:
 	TSubclassOf<class UUserWidget> MenuClass;

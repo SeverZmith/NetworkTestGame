@@ -40,7 +40,7 @@ void UPuzzleGameInstance::LoadMenu()
 
 }
 
-void UPuzzleGameInstance::Host()
+void UPuzzleGameInstance::HostGame()
 {
 	UEngine* Engine = GetEngine();
 
@@ -54,7 +54,7 @@ void UPuzzleGameInstance::Host()
 
 }
 
-void UPuzzleGameInstance::Join(const FString& Address)
+void UPuzzleGameInstance::JoinGame(const FString& Address)
 {
 	UEngine* Engine = GetEngine();
 
