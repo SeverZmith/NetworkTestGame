@@ -8,6 +8,7 @@
 
 #include "Triggers/PlatformTrigger.h"
 #include "MenuSystem/MainMenu.h"
+#include "MenuSystem/MenuWidget.h"
 
 
 UPuzzleGameInstance::UPuzzleGameInstance(const FObjectInitializer & ObjectInitializer)
@@ -16,6 +17,11 @@ UPuzzleGameInstance::UPuzzleGameInstance(const FObjectInitializer & ObjectInitia
 
 	if (!ensure(MenuBPClass.Class != nullptr)) return;
 	MenuClass = MenuBPClass.Class;
+
+	ConstructorHelpers::FClassFinder<UUserWidget> InGameMenuBPClass(TEXT("/Game/MenuSystem/WBP_InGameMenu"));
+
+	if (!ensure(InGameMenuBPClass.Class != nullptr)) return;
+	InGameMenuClass = InGameMenuBPClass.Class;
 
 }
 
@@ -37,6 +43,19 @@ void UPuzzleGameInstance::LoadMenu()
 	// This GameInstance implements the IMenuInterface, So we can pass 'this' pointer to SetMenuInterface().
 	Menu->Setup();
 	Menu->SetMenuInterface(this);
+
+}
+
+void UPuzzleGameInstance::InGameLoadMenu()
+{
+	// Create the Menu object.
+	if (!ensure(MenuClass != nullptr)) return;
+	UMenuWidget* InGameMenu = CreateWidget<UMenuWidget>(this, InGameMenuClass);
+	if (!ensure(InGameMenu != nullptr)) return;
+
+	// This GameInstance implements the IMenuInterface, So we can pass 'this' pointer to SetMenuInterface().
+	InGameMenu->Setup();
+	InGameMenu->SetMenuInterface(this);
 
 }
 

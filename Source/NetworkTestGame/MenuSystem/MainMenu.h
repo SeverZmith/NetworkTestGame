@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Blueprint/UserWidget.h"
+#include "MenuWidget.h"
 #include "MenuInterface.h"
 #include "MainMenu.generated.h"
 
@@ -12,16 +12,9 @@
  * 
  */
 UCLASS()
-class NETWORKTESTGAME_API UMainMenu : public UUserWidget
+class NETWORKTESTGAME_API UMainMenu : public UMenuWidget
 {
 	GENERATED_BODY()
-
-public:
-	void SetMenuInterface(IMenuInterface* MenuInterface);
-
-	void Setup();
-
-	virtual void OnLevelRemovedFromWorld(ULevel* InLevel, UWorld* InWorld) override;
 
 protected:
 	virtual bool Initialize() override;
@@ -62,7 +55,5 @@ private:
 
 	UFUNCTION()
 	void OpenJoinMenu();
-
-	IMenuInterface* MenuInterface;
 
 };

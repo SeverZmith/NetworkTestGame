@@ -8,6 +8,8 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "PuzzleGameInstance.h"
+#include "Engine/World.h"
 
 //////////////////////////////////////////////////////////////////////////
 // ANetworkTestGameCharacter
@@ -74,6 +76,9 @@ void ANetworkTestGameCharacter::SetupPlayerInputComponent(class UInputComponent*
 
 	// VR headset functionality
 	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &ANetworkTestGameCharacter::OnResetVR);
+
+	PlayerInputComponent->BindAction("InGameMenu", IE_Pressed, this, &ANetworkTestGameCharacter::InGameMenu);
+
 }
 
 
@@ -131,4 +136,12 @@ void ANetworkTestGameCharacter::MoveRight(float Value)
 		// add movement in that direction
 		AddMovementInput(Direction, Value);
 	}
+}
+
+void ANetworkTestGameCharacter::InGameMenu()
+{
+	UPuzzleGameInstance* PuzzleGameInstance = Cast<UPuzzleGameInstance>(this->GetGameInstance());
+	if (!ensure(PuzzleGameInstance != nullptr)) return;
+	PuzzleGameInstance->InGameLoadMenu();
+
 }
