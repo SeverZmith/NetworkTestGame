@@ -4,8 +4,10 @@
 
 #include "Engine/Engine.h"
 #include "UObject/ConstructorHelpers.h"
-#include "Triggers/PlatformTrigger.h"
 #include "Blueprint/UserWidget.h"
+
+#include "Triggers/PlatformTrigger.h"
+#include "MenuSystem/MainMenu.h"
 
 
 UPuzzleGameInstance::UPuzzleGameInstance(const FObjectInitializer & ObjectInitializer)
@@ -29,7 +31,7 @@ void UPuzzleGameInstance::LoadMenu()
 {
 	// Create the Menu object.
 	if (!ensure(MenuClass != nullptr)) return;
-	UUserWidget* Menu = CreateWidget<UUserWidget>(this, MenuClass);
+	UMainMenu* Menu = CreateWidget<UMainMenu>(this, MenuClass);
 	if (!ensure(Menu != nullptr)) return;
 
 	// Add Menu to screen.
@@ -47,6 +49,10 @@ void UPuzzleGameInstance::LoadMenu()
 	// Set our input mode with the constructed data.
 	PlayerController->SetInputMode(InputModeData);
 	PlayerController->bShowMouseCursor = true;
+
+	// This GameInstance implements the IMenuInterface,
+	//	So we can pass 'this' pointer to SetMenuInterface().
+	Menu->SetMenuInterface(this);
 
 }
 
