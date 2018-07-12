@@ -31,27 +31,11 @@ void UPuzzleGameInstance::LoadMenu()
 {
 	// Create the Menu object.
 	if (!ensure(MenuClass != nullptr)) return;
-	UMainMenu* Menu = CreateWidget<UMainMenu>(this, MenuClass);
+	Menu = CreateWidget<UMainMenu>(this, MenuClass);
 	if (!ensure(Menu != nullptr)) return;
 
-	// Add Menu to screen.
-	Menu->AddToViewport();
-
-	// We get the PlayerController this way, because this function gets the first ULocalPlayer instance
-	APlayerController* PlayerController = GetFirstLocalPlayerController();
-	if (!ensure(PlayerController != nullptr)) return;
-
-	// Get the slate widget with TakeWidget() and set is as widget to focus on.
-	FInputModeUIOnly InputModeData;
-	InputModeData.SetWidgetToFocus(Menu->TakeWidget());
-	InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-
-	// Set our input mode with the constructed data.
-	PlayerController->SetInputMode(InputModeData);
-	PlayerController->bShowMouseCursor = true;
-
-	// This GameInstance implements the IMenuInterface,
-	//	So we can pass 'this' pointer to SetMenuInterface().
+	// This GameInstance implements the IMenuInterface, So we can pass 'this' pointer to SetMenuInterface().
+	Menu->Setup();
 	Menu->SetMenuInterface(this);
 
 }
