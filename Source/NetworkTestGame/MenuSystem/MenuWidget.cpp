@@ -4,7 +4,6 @@
 
 
 
-
 void UMenuWidget::Setup()
 {
 	// Add Menu to screen.
@@ -39,7 +38,7 @@ void UMenuWidget::OnLevelRemovedFromWorld(ULevel* InLevel, UWorld* InWorld)
 	UWorld* World = GetWorld();
 	if (!ensure(World != nullptr)) return;
 
-	APlayerController* PlayerController = World->GetFirstPlayerController();
+	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
 	if (!ensure(PlayerController != nullptr)) return;
 
 	FInputModeGameOnly InputModeData;
