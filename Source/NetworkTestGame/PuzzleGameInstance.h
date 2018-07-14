@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
 #include "OnlineSubsystem.h"
+#include "OnlineSessionInterface.h"
 
 #include "MenuSystem/MenuInterface.h"
 #include "PuzzleGameInstance.generated.h"
@@ -32,7 +33,7 @@ public:
 	void HostGame() override;
 
 	UFUNCTION(Exec)
-	void JoinGame(const FString& Address) override;
+	void JoinGame(uint32 Index) override;
 
 	virtual void RefreshServerList() override;
 
@@ -55,6 +56,8 @@ private:
 	void OnDestroySessionComplete(FName SessionName, bool Success);
 
 	void OnFindSessionsComplete(bool Success);
+
+	void OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result);
 
 	void CreateSession();
 	

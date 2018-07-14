@@ -6,7 +6,6 @@
 #include "UObject/ConstructorHelpers.h"
 #include "Blueprint/UserWidget.h"
 #include "OnlineSessionSettings.h"
-#include "OnlineSessionInterface.h"
 
 #include "Triggers/PlatformTrigger.h"
 #include "MenuSystem/MainMenu.h"
@@ -44,6 +43,7 @@ void UPuzzleGameInstance::Init()
 			SessionInterface->OnCreateSessionCompleteDelegates.AddUObject(this, &UPuzzleGameInstance::OnCreateSessionComplete);
 			SessionInterface->OnDestroySessionCompleteDelegates.AddUObject(this, &UPuzzleGameInstance::OnDestroySessionComplete);
 			SessionInterface->OnFindSessionsCompleteDelegates.AddUObject(this, &UPuzzleGameInstance::OnFindSessionsComplete);
+			SessionInterface->OnJoinSessionCompleteDelegates.AddUObject(this, &UPuzzleGameInstance::OnJoinSessionComplete);
 
 		}
 
@@ -181,23 +181,36 @@ void UPuzzleGameInstance::OnFindSessionsComplete(bool Success)
 
 }
 
-void UPuzzleGameInstance::JoinGame(const FString& Address)
+void UPuzzleGameInstance::JoinGame(uint32 Index)
 {
-	if (Menu != nullptr)
+	if (!SessionInterface.IsValid()) return;
+	if (!SessionSearch.IsValid()) return;
+
+	SessionInterface->JoinSession(0, SESSION_NAME, SessionSearch->SearchResults[Index]);
+
+}
+
+void UPuzzleGameInstance::OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result)
+{
+	if (!SessionInterface.IsValid()) return;
+
+	FString Address;
+	if (!SessionInterface->GetResolvedConnectString(SessionName, Address))
 	{
-		Menu->SetServerList({ "Server1", "Server2" });
+		UE_LOG(LogTemp, Warning, TEXT("Could not get connect string."));
+		return;
 
 	}
 
-	//UEngine* Engine = GetEngine();
+	UEngine* Engine = GetEngine();
 
-	//if (!ensure(Engine != nullptr)) return;
-	//Engine->AddOnScreenDebugMessage(-1, 5, FColor::Yellow, FString::Printf(TEXT("Joining: %s"), *Address));
+	if (!ensure(Engine != nullptr)) return;
+	Engine->AddOnScreenDebugMessage(-1, 5, FColor::Yellow, FString::Printf(TEXT("Joining: %s"), *Address));
 
-	//APlayerController* PlayerController = GetFirstLocalPlayerController();
-	//
-	//if (!ensure(PlayerController != nullptr)) return;
-	//PlayerController->ClientTravel(Address, ETravelType::TRAVEL_Absolute);
+	APlayerController* PlayerController = GetFirstLocalPlayerController();
+	
+	if (!ensure(PlayerController != nullptr)) return;
+	PlayerController->ClientTravel(Address, ETravelType::TRAVEL_Absolute);
 
 }
 

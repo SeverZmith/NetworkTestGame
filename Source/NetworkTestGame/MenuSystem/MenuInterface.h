@@ -24,7 +24,7 @@ class NETWORKTESTGAME_API IMenuInterface
 public:
 	virtual void HostGame() = 0;
 
-	virtual void JoinGame(const FString& Address) = 0;
+	virtual void JoinGame(uint32 Index) = 0;
 
 	virtual void RefreshServerList() = 0;
 
