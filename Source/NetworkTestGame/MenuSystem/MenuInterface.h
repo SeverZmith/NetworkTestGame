@@ -26,6 +26,8 @@ public:
 
 	virtual void JoinGame(const FString& Address) = 0;
 
+	virtual void RefreshServerList() = 0;
+
 	/** Sam's implementation */
 	// virtual void LoadMainMenu() = 0;
 

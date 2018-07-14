@@ -34,6 +34,8 @@ public:
 	UFUNCTION(Exec)
 	void JoinGame(const FString& Address) override;
 
+	virtual void RefreshServerList() override;
+
 	/** Sam's implementation */
 	// virtual void LoadMainMenu() override;
 
@@ -46,9 +48,13 @@ private:
 
 	IOnlineSessionPtr SessionInterface;
 
+	TSharedPtr<class FOnlineSessionSearch> SessionSearch;
+
 	void OnCreateSessionComplete(FName SessionName, bool Success);
 
 	void OnDestroySessionComplete(FName SessionName, bool Success);
+
+	void OnFindSessionsComplete(bool Success);
 
 	void CreateSession();
 	

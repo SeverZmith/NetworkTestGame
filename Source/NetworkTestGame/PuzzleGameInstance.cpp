@@ -43,6 +43,7 @@ void UPuzzleGameInstance::Init()
 		{
 			SessionInterface->OnCreateSessionCompleteDelegates.AddUObject(this, &UPuzzleGameInstance::OnCreateSessionComplete);
 			SessionInterface->OnDestroySessionCompleteDelegates.AddUObject(this, &UPuzzleGameInstance::OnDestroySessionComplete);
+			SessionInterface->OnFindSessionsCompleteDelegates.AddUObject(this, &UPuzzleGameInstance::OnFindSessionsComplete);
 
 		}
 
@@ -116,6 +117,9 @@ void UPuzzleGameInstance::CreateSession()
 	if (SessionInterface.IsValid())
 	{
 		FOnlineSessionSettings SessionSettings;
+		SessionSettings.bIsLANMatch = true;
+		SessionSettings.NumPublicConnections = 2;
+		SessionSettings.bShouldAdvertise = true;
 		SessionInterface->CreateSession(0, SESSION_NAME, SessionSettings);
 
 	}
@@ -143,17 +147,57 @@ void UPuzzleGameInstance::OnCreateSessionComplete(FName SessionName, bool Succes
 
 }
 
+void UPuzzleGameInstance::RefreshServerList()
+{
+	SessionSearch = MakeShareable(new FOnlineSessionSearch());
+	if (SessionSearch.IsValid())
+	{
+		/** Restrict search results to LAN only. */
+		// SessionSearch->bIsLanQuery = true;
+
+		UE_LOG(LogTemp, Warning, TEXT("Starting Find Session..."));
+		SessionInterface->FindSessions(0, SessionSearch.ToSharedRef());
+
+	}
+
+}
+
+void UPuzzleGameInstance::OnFindSessionsComplete(bool Success)
+{	
+	if (Success && SessionSearch.IsValid() && Menu != nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Finishing Find Session..."));
+
+		TArray<FString> ServerNames;
+		for (const FOnlineSessionSearchResult& SearchResult : SessionSearch->SearchResults)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Found session names: %s"), *SearchResult.GetSessionIdStr());
+			ServerNames.Add(SearchResult.GetSessionIdStr());
+
+		}
+		Menu->SetServerList(ServerNames);
+
+	}
+
+}
+
 void UPuzzleGameInstance::JoinGame(const FString& Address)
 {
-	UEngine* Engine = GetEngine();
+	if (Menu != nullptr)
+	{
+		Menu->SetServerList({ "Server1", "Server2" });
 
-	if (!ensure(Engine != nullptr)) return;
-	Engine->AddOnScreenDebugMessage(-1, 5, FColor::Yellow, FString::Printf(TEXT("Joining: %s"), *Address));
+	}
 
-	APlayerController* PlayerController = GetFirstLocalPlayerController();
-	
-	if (!ensure(PlayerController != nullptr)) return;
-	PlayerController->ClientTravel(Address, ETravelType::TRAVEL_Absolute);
+	//UEngine* Engine = GetEngine();
+
+	//if (!ensure(Engine != nullptr)) return;
+	//Engine->AddOnScreenDebugMessage(-1, 5, FColor::Yellow, FString::Printf(TEXT("Joining: %s"), *Address));
+
+	//APlayerController* PlayerController = GetFirstLocalPlayerController();
+	//
+	//if (!ensure(PlayerController != nullptr)) return;
+	//PlayerController->ClientTravel(Address, ETravelType::TRAVEL_Absolute);
 
 }
 
