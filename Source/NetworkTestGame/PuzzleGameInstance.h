@@ -46,6 +46,10 @@ private:
 
 	IOnlineSessionPtr SessionInterface;
 
-	void OnCreateSessionComplete(FName SessioName, bool Success);
+	void OnCreateSessionComplete(FName SessionName, bool Success);
+
+	void OnDestroySessionComplete(FName SessionName, bool Success);
+
+	void CreateSession();
 	
 };
