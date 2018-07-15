@@ -73,4 +73,6 @@ private:
 
 	TOptional<uint32> SelectedIndex;
 
+	void UpdateChildren();
+
 };

@@ -18,6 +18,9 @@ public:
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* ServerName;
 
+	UPROPERTY(BlueprintReadOnly)
+	bool Selected = false;
+
 	void Setup(class UMainMenu* InParent, uint32 InIndex);
 
 private:

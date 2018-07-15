@@ -76,6 +76,23 @@ void UMainMenu::SetServerList(TArray<FString> ServerNames)
 void UMainMenu::SelectIndex(uint32 Index)
 {
 	SelectedIndex = Index;
+	UpdateChildren();
+
+}
+
+void UMainMenu::UpdateChildren()
+{
+	for (int32 i = 0; i < ServerList->GetChildrenCount(); ++i)
+	{
+		UServerRow* Row = Cast<UServerRow>(ServerList->GetChildAt(i));
+		if (Row != nullptr)
+		{
+			// If val on left of && is false it doesn't bother with whatever is to the right of it.
+			Row->Selected = (SelectedIndex.IsSet() && SelectedIndex.GetValue() == i);
+
+		}
+
+	}
 
 }
 
