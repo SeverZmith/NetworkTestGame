@@ -117,9 +117,11 @@ void UPuzzleGameInstance::CreateSession()
 	if (SessionInterface.IsValid())
 	{
 		FOnlineSessionSettings SessionSettings;
-		SessionSettings.bIsLANMatch = true;
+		SessionSettings.bIsLANMatch = false;
 		SessionSettings.NumPublicConnections = 2;
 		SessionSettings.bShouldAdvertise = true;
+		SessionSettings.bUsesPresence = true;
+
 		SessionInterface->CreateSession(0, SESSION_NAME, SessionSettings);
 
 	}
@@ -154,6 +156,9 @@ void UPuzzleGameInstance::RefreshServerList()
 	{
 		/** Restrict search results to LAN only. */
 		// SessionSearch->bIsLanQuery = true;
+
+		SessionSearch->MaxSearchResults = 100; // Setting this allows the search to find our game. this is because we share an AppID until we pay Steam deposit.
+		SessionSearch->QuerySettings.Set(SEARCH_PRESENCE, true, EOnlineComparisonOp::Equals);
 
 		UE_LOG(LogTemp, Warning, TEXT("Starting Find Session..."));
 		SessionInterface->FindSessions(0, SessionSearch.ToSharedRef());
