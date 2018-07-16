@@ -35,6 +35,8 @@ public:
 	UFUNCTION(Exec)
 	void JoinGame(uint32 Index) override;
 
+	void StartSession();
+
 	virtual void RefreshServerList() override;
 
 	/** Sam's implementation */

@@ -6,13 +6,14 @@
 #include "UObject/ConstructorHelpers.h"
 #include "Blueprint/UserWidget.h"
 #include "OnlineSessionSettings.h"
+#include "UnrealNames.h"
 
 #include "Triggers/PlatformTrigger.h"
 #include "MenuSystem/MainMenu.h"
 #include "MenuSystem/MenuWidget.h"
 
 
-const static FName SESSION_NAME = TEXT("My Session Game");
+const static FName SESSION_NAME = NAME_GameSession; // TODO verify remove: TEXT("GameSession");
 
 const static FName SERVER_NAME_SETTINGS_KEY = TEXT("ServerName");
 
@@ -131,7 +132,7 @@ void UPuzzleGameInstance::CreateSession()
 			SessionSettings.bIsLANMatch = false;
 
 		}
-		SessionSettings.NumPublicConnections = 2;
+		SessionSettings.NumPublicConnections = 5;
 		SessionSettings.bShouldAdvertise = true;
 		SessionSettings.bUsesPresence = true;
 		SessionSettings.Set(SERVER_NAME_SETTINGS_KEY, DesiredServerName, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
@@ -159,7 +160,7 @@ void UPuzzleGameInstance::OnCreateSessionComplete(FName SessionName, bool Succes
 	UWorld* World = GetWorld();
 
 	if (!ensure(World != nullptr)) return;
-	World->ServerTravel("/Game/ThirdPersonCPP/Maps/ThirdPersonExampleMap?listen");
+	World->ServerTravel("/Game/PuzzleGame/Maps/Lobby?listen");
 
 }
 
@@ -246,6 +247,16 @@ void UPuzzleGameInstance::OnJoinSessionComplete(FName SessionName, EOnJoinSessio
 	
 	if (!ensure(PlayerController != nullptr)) return;
 	PlayerController->ClientTravel(Address, ETravelType::TRAVEL_Absolute);
+
+}
+
+void UPuzzleGameInstance::StartSession()
+{
+	if (SessionInterface.IsValid())
+	{
+		SessionInterface->StartSession(SESSION_NAME);
+
+	}
 
 }
 
