@@ -8,9 +8,7 @@
 
 #include "MenuWidget.generated.h"
 
-/**
- * 
- */
+
 UCLASS()
 class NETWORKTESTGAME_API UMenuWidget : public UUserWidget
 {

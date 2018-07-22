@@ -6,9 +6,7 @@
 #include "Engine/StaticMeshActor.h"
 #include "MovingPlatform.generated.h"
 
-/**
- * 
- */
+
 UCLASS()
 class NETWORKTESTGAME_API AMovingPlatform : public AStaticMeshActor
 {

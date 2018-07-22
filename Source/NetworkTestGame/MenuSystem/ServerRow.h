@@ -6,9 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "ServerRow.generated.h"
 
-/**
- * 
- */
+
 UCLASS()
 class NETWORKTESTGAME_API UServerRow : public UUserWidget
 {

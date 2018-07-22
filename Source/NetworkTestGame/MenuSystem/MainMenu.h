@@ -20,9 +20,7 @@ struct FServerData
 
 };
 
-/**
- * 
- */
+
 UCLASS()
 class NETWORKTESTGAME_API UMainMenu : public UMenuWidget
 {
@@ -51,6 +49,12 @@ private:
 	class UButton* QuitButton;
 
 	UPROPERTY(meta = (BindWidget))
+	class UButton* CancelHostButton;
+
+	UPROPERTY(meta = (BindWidget))
+	class UButton* ConfirmHostButton;
+
+	UPROPERTY(meta = (BindWidget))
 	class UButton* ConfirmJoinMenuButton;
 
 	UPROPERTY(meta = (BindWidget))
@@ -70,12 +74,6 @@ private:
 
 	UPROPERTY(meta = (BindWidget))
 	class UEditableTextBox* HostServerName;
-
-	UPROPERTY(meta = (BindWidget))
-	class UButton* CancelHostButton;
-
-	UPROPERTY(meta = (BindWidget))
-	class UButton* ConfirmHostButton;
 
 	UPROPERTY(meta = (BindWidget))
 	class UPanelWidget* ServerList;

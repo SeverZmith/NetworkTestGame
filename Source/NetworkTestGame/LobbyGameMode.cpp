@@ -13,8 +13,9 @@ void ALobbyGameMode::PostLogin(APlayerController* NewPlayer)
 
 	++NumberOfPlayers;
 
-	/** Starts game launch timer when lobby has over X number of players */
-	if (NumberOfPlayers >= 2)
+	/** Starts game launch timer when lobby has over NumToStart number of players */
+	uint32 NumToStart = 2;
+	if (NumberOfPlayers >= NumToStart)
 	{
 		GetWorldTimerManager().SetTimer(GameStartTimer, this, &ALobbyGameMode::StartGame, 10.f);
 
@@ -32,6 +33,7 @@ void ALobbyGameMode::Logout(AController* Exiting)
 
 void ALobbyGameMode::StartGame()
 {
+	// Start session and enable seamless travel. Move to game map.
 	UPuzzleGameInstance* GameInstance = Cast<UPuzzleGameInstance>(GetGameInstance());
 	if (GameInstance == nullptr) return;
 

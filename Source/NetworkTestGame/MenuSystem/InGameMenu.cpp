@@ -13,12 +13,13 @@ bool UInGameMenu::Initialize()
 	bool Success = Super::Initialize();
 	if (!Success) return false;
 
+	// Subscribe cancel button to UInGameMenu::CancelPressed.
 	if (!ensure(CancelButton != nullptr)) return false;
 	CancelButton->OnClicked.AddDynamic(this, &UInGameMenu::CancelPressed);
 
+	// Subscribe quit button to UInGameMenu::QuitPressed.
 	if (!ensure(QuitButton != nullptr)) return false;
 	QuitButton->OnClicked.AddDynamic(this, &UInGameMenu::QuitPressed);
-
 
 	return true;
 
@@ -26,6 +27,7 @@ bool UInGameMenu::Initialize()
 
 void UInGameMenu::CancelPressed()
 {
+	// Remove in-game menu from screen.
 	RemoveFromParent();
 
 	UWorld* World = GetWorld();
@@ -34,6 +36,7 @@ void UInGameMenu::CancelPressed()
 	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
 	if (!ensure(PlayerController != nullptr)) return;
 
+	// Re-enable player controls.
 	FInputModeGameOnly InputModeData;
 	PlayerController->SetInputMode(InputModeData);
 	PlayerController->bShowMouseCursor = false;
@@ -53,6 +56,7 @@ void UInGameMenu::QuitPressed()
 		ANetworkTestGameGameMode* GameMode = World->GetAuthGameMode<ANetworkTestGameGameMode>();
 		if (GameMode)
 		{
+			// If client that is quitting is the host, tell all other clients to return to lobby.
 			GameMode->ReturnToMainMenuHost();
 
 		}
@@ -62,17 +66,11 @@ void UInGameMenu::QuitPressed()
 	{
 		if (PlayerController)
 		{
+			// Return client to main menu.
 			PlayerController->ClientReturnToMainMenu("Back to Main Menu.");
 
 		}
 
 	}
-
-	/** Sam's implementation */
-	//if (MenuInterface != nullptr)
-	//{
-	//	MenuInterface->LoadMainMenu();
-
-	//}
 
 }

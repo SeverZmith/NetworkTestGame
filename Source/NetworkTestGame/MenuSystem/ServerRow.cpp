@@ -11,12 +11,15 @@ void UServerRow::Setup(class UMainMenu* InParent, uint32 InIndex)
 {
 	Parent = InParent;
 	Index = InIndex;
+
+	// Subscribe RowButton with UServerRow::OnClicked method.
 	RowButton->OnClicked.AddDynamic(this, &UServerRow::OnClicked);
 
 }
 
 void UServerRow::OnClicked()
 {
+	// Update selected game index when row is clicked.
 	Parent->SelectIndex(Index);
 
 }

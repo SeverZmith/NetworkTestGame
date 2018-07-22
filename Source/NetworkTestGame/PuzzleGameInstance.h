@@ -10,9 +10,7 @@
 #include "MenuSystem/MenuInterface.h"
 #include "PuzzleGameInstance.generated.h"
 
-/**
- * 
- */
+
 UCLASS()
 class NETWORKTESTGAME_API UPuzzleGameInstance : public UGameInstance, public IMenuInterface
 {
@@ -38,9 +36,6 @@ public:
 	void StartSession();
 
 	virtual void RefreshServerList() override;
-
-	/** Sam's implementation */
-	// virtual void LoadMainMenu() override;
 
 private:
 	TSubclassOf<class UUserWidget> MenuClass;

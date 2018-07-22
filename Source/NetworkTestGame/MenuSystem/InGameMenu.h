@@ -6,9 +6,7 @@
 #include "MenuWidget.h"
 #include "InGameMenu.generated.h"
 
-/**
- * 
- */
+
 UCLASS()
 class NETWORKTESTGAME_API UInGameMenu : public UMenuWidget
 {

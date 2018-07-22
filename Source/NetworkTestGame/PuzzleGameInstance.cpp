@@ -20,6 +20,7 @@ const static FName SERVER_NAME_SETTINGS_KEY = TEXT("ServerName");
 
 UPuzzleGameInstance::UPuzzleGameInstance(const FObjectInitializer & ObjectInitializer)
 {
+	// Set MenuClass to WBP_MainMenu, and set InGameMenuClass to WBP_InGameManu.
 	ConstructorHelpers::FClassFinder<UUserWidget> MenuBPClass(TEXT("/Game/MenuSystem/WBP_MainMenu"));
 
 	if (!ensure(MenuBPClass.Class != nullptr)) return;
@@ -36,8 +37,8 @@ void UPuzzleGameInstance::Init()
 {
 	Super::Init();
 
+	// Get and subscribe to the online subsystem methods.
 	IOnlineSubsystem* Subsystem = IOnlineSubsystem::Get();
-
 	if (Subsystem != nullptr)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Found subsystem: %s"), *Subsystem->GetSubsystemName().ToString());
@@ -91,7 +92,8 @@ void UPuzzleGameInstance::HostGame(FString ServerName)
 	DesiredServerName = ServerName;
 	if (SessionInterface.IsValid())
 	{
-		auto ExistingSession = SessionInterface->GetNamedSession(SESSION_NAME);
+		// If session exists, destroy it. Else, create it.
+		FNamedOnlineSession* ExistingSession = SessionInterface->GetNamedSession(SESSION_NAME);
 		if (ExistingSession != nullptr)
 		{
 			SessionInterface->DestroySession(SESSION_NAME);
@@ -121,6 +123,7 @@ void UPuzzleGameInstance::CreateSession()
 {
 	if (SessionInterface.IsValid())
 	{
+		// If subsystem is NULL (we are local), match with LAN connections.
 		FOnlineSessionSettings SessionSettings;
 		if (IOnlineSubsystem::Get()->GetSubsystemName() == NULL_SUBSYSTEM)
 		{
@@ -132,6 +135,7 @@ void UPuzzleGameInstance::CreateSession()
 			SessionSettings.bIsLANMatch = false;
 
 		}
+		// Set session details.
 		SessionSettings.NumPublicConnections = 5;
 		SessionSettings.bShouldAdvertise = true;
 		SessionSettings.bUsesPresence = true;
@@ -166,6 +170,7 @@ void UPuzzleGameInstance::OnCreateSessionComplete(FName SessionName, bool Succes
 
 void UPuzzleGameInstance::RefreshServerList()
 {
+	// Search for session over AppID.
 	SessionSearch = MakeShareable(new FOnlineSessionSearch());
 	if (SessionSearch.IsValid())
 	{
@@ -189,9 +194,11 @@ void UPuzzleGameInstance::OnFindSessionsComplete(bool Success)
 		UE_LOG(LogTemp, Warning, TEXT("Finishing Find Session..."));
 
 		TArray<FServerData> ServerNames;
+		// For each session found.
 		for (const FOnlineSessionSearchResult& SearchResult : SessionSearch->SearchResults)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Found session names: %s"), *SearchResult.GetSessionIdStr());
+			// Set server details.
 			FServerData Data;
 			Data.Name = SearchResult.GetSessionIdStr();
 			Data.MaxPlayers = SearchResult.Session.SessionSettings.NumPublicConnections;
@@ -259,13 +266,3 @@ void UPuzzleGameInstance::StartSession()
 	}
 
 }
-
-/** Sam's implementation */
-//void UPuzzleGameInstance::LoadMainMenu()
-//{
-//	APlayerController* PlayerController = GetFirstLocalPlayerController();
-//
-//	if (!ensure(PlayerController != nullptr)) return;
-//	PlayerController->ClientTravel("/Game/MenuSystem/MainMenu", ETravelType::TRAVEL_Absolute);
-//
-//}
